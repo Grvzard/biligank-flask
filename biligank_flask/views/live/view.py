@@ -113,10 +113,14 @@ for road in ROADS:
         )
 
 
-
 @bp.route('/')
 def index():
     return render_template(
         'live/index.html',
         notice=[],
     )
+
+
+@bp.route('/data')
+def data():
+    raise Exception('deprecated route')

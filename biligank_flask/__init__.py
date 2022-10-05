@@ -1,6 +1,6 @@
 import time
 
-from flask import Flask, request
+from flask import Flask, render_template, request
 
 from biligank_flask.logger import JsonLogger
 from biligank_flask.utils import get_time
@@ -54,3 +54,8 @@ def default_error(e):
     }
     error_logger.log(data)
     return ERROR_TEXT
+
+
+@app.errorhandler(404)
+def page_notfound(error):
+    return render_template('404.html'), 404
