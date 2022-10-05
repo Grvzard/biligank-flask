@@ -1,0 +1,43 @@
+{% from "macro.html" import link %}
+
+
+{% block result %}
+
+{% if first_time %}
+<table class="table" id="live-data-table" >
+<thead>
+    <tr>
+        <th>封面</th>
+        <th>标题</th>
+        <th>分区</th>
+        <th>时间</th>
+        <th>人气</th>
+    </tr>
+</thead>
+</table>
+{% endif %}
+
+<table>
+<tbody id="{{offset}}-content">
+{% for tp in data %}
+    <tr>
+        <td>{{ link(tp.cover, '链接') }}</td>
+        <td>{{ tp.title }}</td>
+        <td>{{ tp.area_name }}</td>
+        <td>{{ tp.c_ts |strftime_2 }} — {{ tp.last_update |strftime_2 }}</td>
+        <td>{{ tp.watched_num }}</td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+
+<script>
+$(document).ready(function(){
+    $("#live-data-table").append($("#{{offset}}-content"))
+});
+</script>
+
+
+{% include "live/pagination.html" %}
+
+{% endblock result %}

@@ -1,0 +1,64 @@
+
+<div class="modal fade" id="feedback-modal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">反馈</h2>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <textarea name='text' type="text" class="form-control" placeholder="...." id="feedback-text"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="feedback-submit">发送📤</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="toast-container bottom-0 end-0 p-3 position-fixed ">
+<div class="toast" role="alert" id="feedback-toast">
+    <div class="toast-header">
+        <strong class="me-auto">To: biligank</strong>
+        <span class="rounded-2 p-1 me-2">
+            <!-- status notation -->
+        </span>
+        <small id="feedback-send-status">
+            <!-- feedback-send-status -->
+        </small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+
+    <div class="toast-body">
+        <!-- {{ message }} -->
+    </div>
+</div>
+</div>
+
+<script>
+$(document).ready(function(){
+    $("#feedback-submit").click(function(){
+        let text = $("#feedback-text").val();
+        if (text == '') {
+            return false;
+        }
+        $.post("/feedback", {
+            "text": text,
+        }, function(res){
+            $("#feedback-toast .toast-body").text(text);
+            if (res == "ok") {
+                $("#feedback-text").val('');
+                $("#feedback-send-status").text('成功接收');
+                $("#feedback-send-status").prev().removeClass('bg-danger');
+                $("#feedback-send-status").prev().addClass('bg-success');
+            } else {
+                $("#feedback-send-status").text('失败');
+                $("#feedback-toast .toast-body").text("(发送失败，请再试试？)");
+                $("#feedback-send-status").prev().removeClass('bg-success');
+                $("#feedback-send-status").prev().addClass('bg-danger');
+            }
+            $("#feedback-toast").toast('show');
+        });
+    });
+});
+</script>

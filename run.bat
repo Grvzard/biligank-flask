@@ -1,0 +1,3 @@
+flask run
+
+cmd /k

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% import "macro.html" as m %}
+
+
+{% macro log(date, content, checked='') -%}
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" onclick="return false;" {{checked}}>
+        <label class="form-check-label">
+        {{date}} :  {{content}}</label>
+    </div>
+{%- endmacro %}
+
+
+{% block content %}
+
+
+<ul class="mb-5">
+<li class="mb-4">
+<p>关于查弹幕功能：</p>
+
+    <details class="mb-2">
+        <summary class="mb-1">
+        ⚙️ 原理
+        </summary>
+        <p>
+    与主播用的弹幕姬类似，就是录制直播间的弹幕/礼物消息。<br>
+    然后同时录制许多直播间，根据用户uid查找消息。<br>
+        </p>
+    </details>
+
+    <details class="mb-2">
+        <summary class="mb-1">
+        🔘 房间
+        </summary>
+        <p>
+    ① 首先保证部分房间全天录制；{# m.link("/live/blive_rooms/", "(>名单)") #}<br>
+    ② 然后会在各分区动态挑选在直播的录制。<br>
+        </p>
+    </details>
+
+    <details class="mb-2">
+        <summary class="mb-1">
+        📑 日志
+        </summary>
+        <p>
+    {{ log('2022-09-20', '15点到21点数据丢失。直播记录中断。', 'checked') }}
+    {{ log('2022-09-04', '增加同时录制上限', 'checked') }}
+    {{ log('2022-08-20', '增加同时录制上限', 'checked') }}
+    {{ log('2022-08-19', '出bug产生了许多重复数据。', 'checked') }}
+    {{ log('2022-08-12', '更改录制策略 (blive -> ablive)', 'checked') }}
+    {# log('2022-07-23', '全站不封顶测试。（测单机限制/集群稳定。高峰6万√）', 'checked') #}
+    {{ log('2022-07-04', '之前礼物数量会不正确。', 'checked') }}
+    {{ log('2022-06-09', '开机。', 'checked') }}
+        </p>
+    </details>
+
+    <details class="mb-2">
+        <summary class="mb-1">
+        直播记录
+        </summary>
+        <p>
+    ① 都能查到，但不一定会录到。<br>
+    ② 并非准确时间，正常会比开播晚&比下播早几分钟。<br>
+        </p>
+    </details>
+
+    <details class="mb-2">
+        <summary class="mb-1">
+        🚦 监控
+        </summary>
+        {% if status %}
+            {% for module in status.values() %}
+                {{module.name}} -- {{module.value}} <br>
+            {% endfor %}
+            {% if status.live_monitor.ok %}
+                <span class="badge rounded-circle p-1 me-2 bg-success">
+                </span>ok
+            {% else %}
+                <span class="badge rounded-circle p-1 me-2 bg-warning">
+                </span>warning
+            {% endif %}
+        {% endif %}
+    </details>
+
+</li>
+
+
+<li class="mb-4">
+🦄 弹幕数据：百度网盘；🦉 项目代码：GitHub
+</li>
+
+
+<li class="mb-4">
+    友链~
+    🍙 {{ m.link("https://nf.asoul-rec.com/", "奶粉の录播站") }}
+    🍙 {{ m.link("https://danmaku.suki.club/", "Megghyの弹幕站") }}
+</li>
+
+</ul>
+
+{{ m.card("有问题会在这里解释👇") }}
+{% include "_maintain/QA.tmpl.html" %}
+<br>
+
+<hr class="my-4 mx-2">
+
+{# include "donate.html" #}
+
+
+{% endblock %}

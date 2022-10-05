@@ -1,0 +1,86 @@
+{% from "macro.html" import space %}
+
+
+{% block result %}
+
+
+{% block danmaku_filter %}
+{# if first_time #}
+{% if False %}
+    <div id="blive-filter">
+        <div class="input-group mb-4">
+            <select class="form-select" id="select_liver">
+                <option>全部</option>
+            </select>
+
+            <div class="form-floating">
+                <input type="text" class="form-control" placeholder="关键词" id="danmaku_filter_text">
+                <label for="danmaku_filter_text">关键词</label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    $(document).ready(function(){
+        $("#select_liver").click(function(){
+            let liver = "liver-" + $("#select_liver").val();
+            if (liver == "liver-" + "全部" ){
+                $(".danmaku_card").show();
+            } else {
+                $(".danmaku_card").hide();
+                $(".danmaku_card").filter('#'+liver).show();
+            }
+        });
+        $("#danmaku_filter_text").keydown(function(){
+            $(".danmaku_card div.collapse").addClass("show");
+            $(".danmaku").hide();
+            $(".danmaku").filter(":contains('" + $(this).val() + "')").show();
+        });
+    });
+    </script>
+{% endif %}
+{% endblock danmaku_filter %}
+
+
+{% for card in data %}
+{% set date, liverid, danmakus = card.values() %}
+{% set liver_uname = rooms_dict[liverid].uname %}
+<div class="card danmaku_card" id="liver-{{liver_uname}}">
+    <div class="card-header" data-bs-toggle="collapse" data-bs-target="#card-{{liverid}}-{{date}}">
+        {{date}} {{ space(liverid, liver_uname) }}
+        <span class="badge bg-primary">{{card.danmakus | length}}</span>
+    </div>
+    <div class="collapse show" id="card-{{liverid}}-{{date}}">
+    <div class="card-body">
+    {% for danmaku in danmakus %}
+        <span class="danmaku">
+        {{ danmaku[0] |ts2clock }} -> {{ danmaku[1] }} <br>
+        </span>
+    {% endfor %}
+    </div>
+    </div>
+</div>
+{% endfor %}
+
+
+{% include "live/pagination.html" %}
+
+
+{#<script>
+$(document).ready(function(){
+    // refresh_filter
+    var livers = new Set();
+    livers.add("全部");
+    $(".danmaku_card").each(function(){
+        livers.add($(this).attr("id").split("-")[1]);
+    });
+    rs = '';
+    for (const liver of livers) {
+        rs += "<option>" + liver + "</option>";
+    }
+    $('#select_liver').html(rs);
+});
+</script>#}
+
+
+{% endblock result %}

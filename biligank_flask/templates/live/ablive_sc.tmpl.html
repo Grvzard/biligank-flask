@@ -1,0 +1,41 @@
+{% from "macro.html" import space %}
+
+
+{% block result %}
+
+
+<table class="table caption-top"  id="live-data-table" >
+<caption>{{next_offset}}</caption>
+<thead>
+    <tr>
+        <th>时间</th>
+        <th>用户</th>
+        <th>花费</th>
+        <th>留言</th>
+    </tr>
+</thead>
+<tbody>
+{% for superchat in data %}
+    <tr>
+        <td>{{ superchat.ts |ts2clock }}</td>
+        <td>{{ space(superchat.uid, superchat.uname) }}</td>
+        <td>￥{{ superchat.sc_price |int }}</td>
+        <td>{{ superchat.text }}</td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+
+<script>
+$(document).ready(function(){
+    $("#pagination-more").click(function(){
+        $("#result-content").empty()
+    })
+});
+</script>
+
+
+{% include "live/pagination.html" %}
+
+
+{% endblock result %}

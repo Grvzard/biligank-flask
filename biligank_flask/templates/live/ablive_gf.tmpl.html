@@ -1,0 +1,44 @@
+{% from "macro.html" import space %}
+
+
+{% block result %}
+
+
+{% if first_time %}
+<table class="table table-bordered table-hover"  id="live-data-table" >
+<thead>
+    <tr>
+        <th>时间</th>
+        <th>主播</th>
+        <th>礼物</th>
+        <th>花费</th>
+    </tr>
+</thead>
+
+</table>
+{% endif %}
+
+<table>
+<tbody id="{{next_offset}}-rows">
+{% for gift in data %}
+{% set liver_uname = rooms_dict[gift.liverid].uname %}
+    <tr>
+        <td>{{ gift.ts |strftime }}</td>
+        <td>{{ space(gift.liverid, liver_uname) }}</td>
+        <td>{{ gift.gift_info }}</td>
+        <td>￥ {{ gift.gift_cost }}</td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+
+<script>
+$(document).ready(function(){
+    $("#live-data-table").append($("#{{next_offset}}-rows"));
+});
+</script>
+
+{% include "live/pagination.html" %}
+
+
+{% endblock %}

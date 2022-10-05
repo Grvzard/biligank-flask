@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <title>biligank</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- prevent external links return http 403 code -->
+    <meta name="referrer" content="no-referrer">
+    <!-- just block search engine's crawling -->
+    <meta name="robots" content="none, noarchieve">
+    <!-- prevent favicon.ico return 404.html -->
+    <link rel="icon" href="data:image/ico;base64,aWNv">
+    <!-- jquery -->
+    <script src="https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/5.2.0/js/bootstrap.bundle.min.js"></script>
+
+    {% block scripts %}{% endblock %}
+</head>
+
+<body>
+    <div class="container-fluid bg-light">
+    {% block navbar %}
+        <header class="d-flex justify-content-center navbar-expand-sm nav-tabs py-3 ">
+            <ul class="nav">
+                <li class="nav-item"><a href="{{url_for('live.index')}}" class="nav-link biligank-header-nav">
+                    查弹幕
+                </a></li>
+
+                <li class="nav-item"><a href="/about" class="nav-link biligank-header-nav" data-road="about">
+                    About
+                </a></li>
+
+            </ul>
+            <button type="button" class="btn ms-2" data-bs-toggle="modal" data-bs-target="#feedback-modal">?</button>
+            {% include "feedback.tmpl.html" %}
+
+        </header>
+    {% endblock navbar %}
+    </div>
+
+    <div id="body-content" class="container pt-5">
+    {% block content %}
+    {% endblock content %}
+    </div>
+
+    {% block footer %}
+    <br>
+    <br>
+    <br>
+    <br>
+    {% endblock footer %}
+
+</body>
+</html>

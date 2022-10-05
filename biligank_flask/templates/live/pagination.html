@@ -1,0 +1,30 @@
+<div class="mt-5" id="addition-pagination">
+    <nav>
+        <ul class="pagination justify-content-center ">
+            <li class="page-item disabled">
+              <a class="page-link">~ {{next_offset}}</a>
+            </li>
+            {% if has_more %}
+            <li class="page-item">
+              <a class="page-link" id="pagination-more" href="javascript:void(0)" data-uid="{{uid}}" data-road={{road}} data-offset="{{next_offset}}">更多</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+              <a class="page-link">到底了</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <script>
+    $(document).ready(function(){
+        $("#pagination-more").click(function(){
+            let uid = $(this).data("uid")
+            let road = $(this).data("road")
+            let offset = $(this).data("offset")
+            get_live_data(uid, road, offset)
+        })
+    });
+    </script>
+
+</div>

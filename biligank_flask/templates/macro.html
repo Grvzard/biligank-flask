@@ -1,0 +1,19 @@
+{% macro card() -%}
+    <div class="card">
+        <div class="card-body">
+            {% for text in varargs %}
+                {{ text }}<br>
+            {% endfor %}
+        </div>
+    </div>
+{%- endmacro %}
+
+
+{% macro space(uid, uname) -%}
+    <a href="https://space.bilibili.com/{{ uid }}" style="text-decoration:none" target="_blank">{{ uname }}</a>
+{%- endmacro %}
+
+
+{% macro link(site, display) -%}
+    <a href="{{ site }}" style="text-decoration:none" target="_blank">{{ display }}</a>
+{%- endmacro %}

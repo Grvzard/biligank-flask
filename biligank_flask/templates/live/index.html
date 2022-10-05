@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% import 'macro.html' as m %}
+
+
+{% block content %}
+
+{% block search_bar %}
+    <div class="input-group input-group-md mb-5" id="searchbar">
+
+        <button id="road_selector-btn" type="button" class="btn btn-primary dropdown-toggle rounded-2 shadow-sm" data-bs-toggle="dropdown">
+        弹幕
+        </button>
+
+        <input type="search" class="form-control rounded-2 shadow-sm me-3 ms-3" onkeydown="if(event.keyCode==13) {searchbar_enter()}" oninput="value=value.replace(/[^\d]/g,'')" placeholder="uid" id="search_text" required>
+
+        <ul class="dropdown-menu text-center" id="road-selector" data-road="">
+            <li><a class="dropdown-item" href="#" class= "road-select" data-road="ablive_dm">弹幕</a></li>
+            <li><a class="dropdown-item" href="#" class= "road-select" data-road="ablive_en">入场</a></li>
+            <li><a class="dropdown-item" href="#" class= "road-select" data-road="ablive_gf">礼物</a></li>
+            <hr class="dropdown-divider">
+            <li><a class="dropdown-item" href="#" class= "road-select" data-road="tp">直播记录</a></li>
+            <li><a class="dropdown-item" href="#" class= "road-select" data-road="ablive_sc">直播间sc</a></li>
+            <hr class="dropdown-divider">
+            <li><a class="dropdown-item" href="#" data-road="livedm">历史弹幕</a></li>
+        </ul>
+    </div>
+
+    <script>
+    $(document).ready(function(){
+        $("#road-selector .dropdown-item").click(function(){
+            $("#road_selector-btn").text($(this).text());
+            let road = $(this).data("road");
+            $("#road-selector").data("road", road);
+            do_search();
+        });
+
+    });
+
+    function searchbar_enter(){
+        let road = $("#road-selector").data("road");
+        if (road == '') {
+            $("#road-selector .dropdown-item").first().click();
+            return false;
+        } else {
+            do_search();
+        }
+    }
+
+    function do_search(){
+        let uid = $("#search_text").val();
+        if (uid == ''){
+            return false;
+        }
+
+        $("#result-content").empty();
+
+        let road = $("#road-selector").data("road");
+        if (road == 'livedm') {
+            // get_livedm_map(uid);
+            let offset = "0";
+            get_live_data(uid, road, offset);
+        } else {
+            let offset = "0";
+            get_live_data(uid, road, offset);
+        }
+    }
+
+    function get_live_data(uid, road, offset){
+        $("#addition-pagination").remove();
+        $("#result-loading").show();
+        $.get("/live/"+road, {"uid":uid, "offset":offset}, function(template){
+            $("#result-loading").hide();
+            $("#result-content").append(template);
+        });
+    }
+
+    function get_livedm_map(uid){
+        $("#result-loading").show();
+        $.get("/livedm/map", {"uid":uid}, function(template){
+            $("#result-loading").hide();
+            $("#result-content").append(template);
+        });
+    }
+
+    </script>
+
+{% endblock search_bar %}
+
+{% block result %}
+    <div id="result-content">
+        {% for info in notice %}
+        <div class="alert alert-warning alert-dismissible">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <strong>{{info['date']}}</strong> 
+            {{info['content']}}
+        </div>
+        {% endfor %}
+
+        {% include "_maintain/live_index_notice.tmpl.html" %}
+
+        <div id="result-pagination">
+        </div>
+    </div>
+
+    <!-- <div id="result-content-addition" > -->
+
+    <div id="result-loading" class="mt-5" style="display:none;">
+        <div class="d-flex justify-content-center"><span class="spinner-grow text-center"></span></div>
+    </div>
+
+    <!-- </div> -->
+{% endblock result %}
+
+{% endblock %}
+
+
