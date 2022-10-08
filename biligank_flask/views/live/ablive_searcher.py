@@ -117,7 +117,7 @@ class AbliveSearcher:
             bind=db.get_engine(bind_key='ablive_en')
         ).all()
         for entry in rs_tup:
-            date_entry_list.append(entry)
+            date_entry_list.append(dict(entry))
             _livers.add(entry['liverid'])
 
         return date_entry_list, _livers
@@ -132,7 +132,7 @@ class AbliveSearcher:
             bind=db.get_engine(bind_key='ablive_gf')
         ).all()
         for gift in rs_tup:
-            date_gift_list.append(gift)
+            date_gift_list.append(dict(gift))
             _livers.add(gift['liverid'])
 
         return date_gift_list, _livers
@@ -148,6 +148,6 @@ class AbliveSearcher:
         ).all()
         for superchat in rs_tup:
             # superchat['sc_price'] = int(superchat['sc_price'])
-            date_sc_list.append(superchat)
+            date_sc_list.append(dict(superchat))
 
         return date_sc_list, set()
