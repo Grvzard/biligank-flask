@@ -18,7 +18,7 @@
 {% endif %}
 
 <table>
-<tbody id="{{offset}}-content">
+<tbody id="{{next_offset}}-content">
 {% for tp in data %}
     <tr>
         <td>{{ link(tp.cover, '链接') }}</td>
@@ -33,7 +33,7 @@
 
 <script>
 $(document).ready(function(){
-    $("#live-data-table").append($("#{{offset}}-content"))
+    $("#live-data-table").append($("#{{next_offset}}-content"))
 });
 </script>
 
