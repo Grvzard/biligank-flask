@@ -3,3 +3,4 @@ Flask >= 2.2.0, < 2.3.0
 Flask-SQLAlchemy == 3.0.0
 pymongo >= 4.2.0, < 4.3.0
 requests >= 2.25.0, < 3.0.0
+python-dotenv == 0.21.0
