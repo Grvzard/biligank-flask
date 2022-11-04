@@ -1,3 +1,1 @@
-flask run
-
-cmd /k
+python -m flask run
