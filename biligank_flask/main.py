@@ -15,6 +15,10 @@ if app.config['DEBUG']:
 else:
     app.config.from_object('app_configs.ProdConfig')
 
+from .mongodb import mongodb
+from .kvdb import kvdb
+mongodb.init_app(app)
+kvdb.init_app(app)
 
 with app.app_context():
     from .views import general, live

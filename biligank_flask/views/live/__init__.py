@@ -2,6 +2,7 @@
 from flask import Blueprint, current_app, render_template
 
 from biligank_flask.logger import SearchLogger
+from biligank_flask.kvdb import kvdb
 
 from .ablive_searcher import AbliveSearcher
 from .livedm_searcher import LivedmSearcher
@@ -53,9 +54,11 @@ for road in ROADS:
 
 @bp.route('/')
 def index():
+    notice = kvdb.get('notice')
     return render_template(
         'live/index.html',
-        notice=[],
+        notice=notice,
+        # notice=[],
     )
 
 

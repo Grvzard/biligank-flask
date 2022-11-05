@@ -1,7 +1,7 @@
 
 from flask import Blueprint, current_app, render_template, request
 
-from biligank_flask.kvdb import KvDb
+from biligank_flask.kvdb import kvdb
 from biligank_flask.logger import FeedbackLogger
 from biligank_flask.utils import get_time
 
@@ -20,7 +20,7 @@ bp.add_url_rule(
 
 
 feedback_logger = FeedbackLogger(**current_app.config['FEEDBACK_LOGGER'])
-kvdb = KvDb(**current_app.config['KV_DB'])
+# kvdb = KvDb(**current_app.config['KV_DB'])
 
 
 @bp.route('/feedback', methods=['POST'])
