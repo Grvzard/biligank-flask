@@ -15,7 +15,7 @@ bp = Blueprint(
 
 bp.add_url_rule(
     rule='/',
-    view_func=live.view.index,
+    view_func=live.index,
 )
 
 
