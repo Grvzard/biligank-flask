@@ -2,10 +2,13 @@ from typing import Sequence, Union
 
 import pymongo
 
+from ...mongodb import mongodb
+
 
 class LiveroomSearcher:
     def __init__(self, mongo_config: str):
-        self.mongo_client: pymongo.MongoClient = pymongo.MongoClient(mongo_config)
+        # self.mongo_client: pymongo.MongoClient = pymongo.MongoClient(mongo_config)
+        self.mongo_client = mongodb.client
         self.db = self.mongo_client['bili_liveroom']
 
     def get_livers_info(self, liverids: Union[Sequence[int], set[int]]):

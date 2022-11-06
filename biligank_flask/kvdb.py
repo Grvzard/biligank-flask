@@ -4,7 +4,8 @@ import pymongo
 
 
 class KvDb:
-    def __init__(self, config: str) -> None:
+    def init_app(self, app) -> None:
+        config = app.config['ABLIVE']['MONGO_CONFIG']
         self.client: pymongo.MongoClient = pymongo.MongoClient(config)
         self.coll = self.client['biligank_web']['var']
 
@@ -23,3 +24,5 @@ class KvDb:
         #     '$set': {
         #         'value': value}
         #     }, upsert=True)
+
+kvdb = KvDb()

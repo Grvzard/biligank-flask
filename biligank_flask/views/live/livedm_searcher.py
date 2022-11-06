@@ -2,11 +2,14 @@ from typing import Any, Optional
 
 import pymongo
 
+from ...mongodb import mongodb
+
 
 class LivedmSearcher:
     def __init__(self, mongo_config: str, limits: int) -> None:
         self.limits = limits
-        self.mongo_client: pymongo.MongoClient = pymongo.MongoClient(mongo_config)
+        # self.mongo_client: pymongo.MongoClient = pymongo.MongoClient(mongo_config)
+        self.mongo_client = mongodb.client
         self.db = self.mongo_client['livedm']
         self.update_colls()
 
