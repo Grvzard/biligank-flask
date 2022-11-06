@@ -5,3 +5,4 @@ pymongo >= 4.2.0, < 4.3.0
 requests >= 2.25.0, < 3.0.0
 python-dotenv == 0.21.0
 gunicorn == 20.1.0
+gevent == 21.12.0
