@@ -1,10 +1,12 @@
 import time
 from copy import deepcopy
+from pathlib import Path
+import json
 
 import pymongo
 import requests
 
-from biligank_flask.utils import get_clock, get_date, write_json
+from biligank_flask.utils import get_date
 
 __all__ = 'SearchLogger', 'FeedbackLogger',
 
@@ -21,30 +23,24 @@ class MultiLogger:
                 h = TgbotLogger(setting)
             self.loggers.append(h)
 
-
-class FeedbackLogger(MultiLogger):
-    def log(self, data):
-        log_info = deepcopy(data)
+    def log(self, log_info):
         for logger in self.loggers:
             logger.log(log_info)
 
 
-class SearchLogger(MultiLogger):
-    def log(self, **records):
-        log_info = deepcopy(records)
-        log_info['ts'] = int(time.time())
-        log_info['clock'] = get_clock()
-
-        for logger in self.loggers:
-            logger.log(log_info)
+def make_logs_dir():
+    Path('logs').mkdir(exist_ok=True)
 
 
 class JsonLogger:
     def __init__(self, file_name):
-        self.file_name = file_name
+        make_logs_dir()
+        self.file = Path('logs') / file_name
 
     def log(self, log_info):
-        write_json(log_info, self.file_name)
+        with self.file.open('a', encoding='utf-8') as f:
+            json.dump(log_info, f, ensure_ascii=False, indent=4)
+            f.write(',')
 
 
 class MongoLogger:
@@ -60,18 +56,16 @@ class TgbotLogger:
     def __init__(self, setting):
         self.token = setting['token']
         self.chat_id = setting['chat_id']
-        self.url = f"https://api.telegram.org/bot{self.token}/sendMessage"
 
     def log(self, log_info):
-        text = ""
-        for k, v in log_info.items():
-            text += f"{v}\n"
+        url = f"https://api.telegram.org/bot{self.token}/sendMessage"
+        text = f"\n".join([f"{msg}"for msg in log_info.values()])
         payload = {
             "chat_id": self.chat_id,
             "text": text,
             "parse_mode": "HTML",
         }
-        resp = requests.post(self.url, json=payload, timeout=3).json()
+        resp = requests.post(url, json=payload, timeout=5).json()
         if resp['ok']:
             return True
         else:

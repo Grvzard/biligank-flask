@@ -32,7 +32,7 @@ from .jinja_filters import register_jinja_filters
 register_jinja_filters(app)
 
 
-error_logger = JsonLogger('logs/error')
+error_logger = JsonLogger('error.json')
 ERROR_TEXT = app.config['ERROR_TEXT']
 
 @app.errorhandler(Exception)

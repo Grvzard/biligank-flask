@@ -1,3 +1,4 @@
+import time
 
 from flask import render_template, request
 from flask.views import View
@@ -35,14 +36,15 @@ class AbliveView(View):
             data, next_offset, has_more, liverids = self.searcher.more(uid, offset)
             rooms_dict = self.liveroom.get_livers_info(liverids)
 
-        self.search_logger.log(
-            uid = uid,
-            road = road,
-            offset = offset,
-            loadtime = timer.result,
-            ip = request.headers.get('x-real-ip'),
-            not_render = not_render,
-        )
+        self.search_logger.log({
+            'uid': uid,
+            'road': road,
+            'offset': offset,
+            'loadtime': timer.result,
+            'ip': request.headers.get('x-real-ip'),
+            'not_render': not_render,
+            'ts': int(time.time()),
+        })
 
         resp = {
             "road": road,

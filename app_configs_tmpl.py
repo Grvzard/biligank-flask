@@ -24,10 +24,10 @@ class Config:
         "tp": "mysql+pymysql://localhost:3306/tp",
     }
     SEARCH_LOGGER = {
-        "json": "logs/search_log",
+        "json": "search_log.json",
     }
     FEEDBACK_LOGGER = {
-        "json": "logs/feedback",
+        "json": "feedback.json",
     }
     KV_DB = {
         "config": "",

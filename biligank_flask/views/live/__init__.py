@@ -1,7 +1,7 @@
 
 from flask import Blueprint, current_app, render_template
 
-from biligank_flask.logger import SearchLogger
+from biligank_flask.logger import MultiLogger
 from biligank_flask.kvdb import kvdb
 
 from .ablive_searcher import AbliveSearcher
@@ -24,7 +24,7 @@ ROADS = current_app.config['ABLIVE']['ROADS']
 LIMITS = current_app.config['ABLIVE']['LIMITS']
 
 liveroom_searcher = LiveroomSearcher(MONGO_CONFIG)
-search_logger = SearchLogger(
+search_logger = MultiLogger(
     **current_app.config['SEARCH_LOGGER']
 )
 
