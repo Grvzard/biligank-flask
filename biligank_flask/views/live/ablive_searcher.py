@@ -77,7 +77,6 @@ class AbliveSearcher:
             {'uid': uid},
             bind=db.get_engine(bind_key='tp')
         ).all()
-        print(rs_tup)
         for tp in rs_tup:
             date_tp_list.append(tp)
 
