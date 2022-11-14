@@ -1,8 +1,9 @@
 [flake8]
-max-line-length = 89
+max-line-length = 88
 extend-ignore = E251
 exclude = 
     .*,
     __pycache__,
     utils.py,
     __init__.py,
+    app_configs*,
