@@ -1,18 +1,18 @@
-from typing import Sequence, Union
+from collections.abc import Sequence
+from typing import Union
 
 
 class LiveroomSearcher:
 
-    def get_livers_info(self, db, liverids: Union[Sequence[int], set[int]]):
-        liverids = list(liverids)
+    def get_livers_info(self, db, liverids: Sequence[int]):
         rooms_dict = {}
         for coll in ('all', 'rooms_state'):
             rs = db[coll].find({
-                'uid': {
-                    '$in': liverids},
+                    'uid': {'$in': list(liverids)},
                 }, {
-                'uid': 1, 'uname': 1, 'area_name': 1, '_id': 0,
-                })
+                    'uid': 1, 'uname': 1, 'area_name': 1, '_id': 0,
+                },
+            )
             for room_info in rs:
                 liverid = int(room_info['uid'])
                 rooms_dict[liverid] = room_info
@@ -20,13 +20,13 @@ class LiveroomSearcher:
         return rooms_dict
 
     def get_liver_info(self, db, liverid: Union[int, str]):
-        liverid = int(liverid)
         for coll in ('all', 'rooms_state'):
             room_info = db[coll].find_one({
-                'uid': liverid
+                    'uid': int(liverid)
                 }, {
-                'uname': 1, 'area_name': 1, '_id': 0
-                })
+                    'uname': 1, 'area_name': 1, '_id': 0
+                },
+            )
             if room_info:
                 break
         else:

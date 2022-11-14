@@ -1,9 +1,8 @@
 
 from flask import Blueprint, current_app, render_template
 
-from biligank_flask.logger import MultiLogger
-from biligank_flask.kvdb import kvdb
-
+from ...kvdb import kvdb
+from ...logger import MultiLogger
 from .ablive_searcher import AbliveSearcher
 from .livedm_searcher import LivedmSearcher
 from .liveroom_searcher import LiveroomSearcher

@@ -18,11 +18,5 @@ class KvDb:
 
     def set(self, key: str, value: Any) -> None:
         ...
-        # self.coll.update_one({
-        #     'key': key
-        #     }, {
-        #     '$set': {
-        #         'value': value}
-        #     }, upsert=True)
 
 kvdb = KvDb()

@@ -1,14 +1,12 @@
-import time
-from copy import deepcopy
-from pathlib import Path
 import json
+from pathlib import Path
 
 import pymongo
 import requests
 
-from biligank_flask.utils import get_date
+from .utils import get_date
 
-__all__ = 'SearchLogger', 'FeedbackLogger',
+__all__ = 'MultiLogger', 'JsonLogger', 'MongoLogger', 'TgbotLogger'
 
 
 class MultiLogger:
@@ -59,7 +57,7 @@ class TgbotLogger:
 
     def log(self, log_info):
         url = f"https://api.telegram.org/bot{self.token}/sendMessage"
-        text = f"\n".join([f"{msg}"for msg in log_info.values()])
+        text = "\n".join(map(str, log_info.values()))
         payload = {
             "chat_id": self.chat_id,
             "text": text,

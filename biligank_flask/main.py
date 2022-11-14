@@ -1,10 +1,8 @@
-import time
 
 from flask import Flask, render_template, request
 
-from biligank_flask.logger import JsonLogger
-from biligank_flask.utils import get_time
-
+from .logger import JsonLogger
+from .utils import get_time
 
 app = Flask(__name__)
 
@@ -15,8 +13,8 @@ if app.config['DEBUG']:
 else:
     app.config.from_object('app_configs.ProdConfig')
 
-from .mongodb import MongoDB
 from .kvdb import kvdb
+from .mongodb import MongoDB
 mongodb = MongoDB(app)
 kvdb.init_app(app)
 
@@ -34,6 +32,7 @@ register_jinja_filters(app)
 
 error_logger = JsonLogger('error.json')
 ERROR_TEXT = app.config['ERROR_TEXT']
+
 
 @app.errorhandler(Exception)
 def default_error(e):

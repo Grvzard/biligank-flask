@@ -1,6 +1,6 @@
 
-from flask import Flask
 import pymongo
+from flask import Flask
 
 
 class MongoDB:

@@ -3,7 +3,7 @@ from typing import Any, Optional
 
 from flask import current_app
 
-from biligank_flask.utils import get_date
+from ...utils import get_date
 
 __all__ = 'AbliveSearcher',
 
@@ -148,7 +148,6 @@ class AbliveSearcher:
             bind=db.get_engine(bind_key='ablive_sc')
         ).all()
         for superchat in rs_tup:
-            # superchat['sc_price'] = int(superchat['sc_price'])
             date_sc_list.append(dict(superchat))
 
         return date_sc_list, set()

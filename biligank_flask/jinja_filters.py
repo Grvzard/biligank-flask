@@ -1,6 +1,5 @@
-import time
 
-from .utils import ts2date, ts2date_2, ts2clock
+from .utils import ts2clock, ts2date, ts2date_2
 
 
 def register_jinja_filters(app):

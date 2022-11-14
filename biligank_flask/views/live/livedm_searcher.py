@@ -46,10 +46,11 @@ class LivedmSearcher:
 
     def daily_docs(self, db, date: str, uid: int) -> tuple[list, set]:
         docs = db[date].find({
-            'uid': uid,
+                'uid': uid,
             }, {
-            '_id': 0,
-            })
+                '_id': 0,
+            },
+        )
         date_dm_cards = []
         _liverids = set()
         for doc in docs:
@@ -68,11 +69,12 @@ class LivedmSearcher:
     def get_doc(self, uid: int, liverid: int, date: str) -> Optional[dict[str, Any]]:
         part = date[:7]
         doc = self.mongo_client[f'livedm_{part}'][date].find_one({
-            'uid': uid,
-            'liverid': int(liverid),
+                'uid': uid,
+                'liverid': int(liverid),
             }, {
-            '_id': 0,
-        })
+                '_id': 0,
+            },
+        )
         if doc:
             doc['dm'].sort(reverse=False)
 

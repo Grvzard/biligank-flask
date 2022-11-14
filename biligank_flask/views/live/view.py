@@ -1,9 +1,9 @@
 import time
 
-from flask import render_template, request, current_app
+from flask import current_app, render_template, request
 from flask.views import View
 
-from biligank_flask.utils import Timer
+from ...utils import Timer
 
 __all__ = 'AbliveView',
 
