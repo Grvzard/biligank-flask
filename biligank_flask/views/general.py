@@ -1,7 +1,6 @@
 
 from flask import Blueprint, current_app, render_template, request
 
-from ..kvdb import kvdb
 from ..logger import MultiLogger
 from ..utils import get_time
 from . import live
@@ -35,5 +34,6 @@ def feedback():
 
 @bp.route('/about')
 def about():
-    status = kvdb.get('status')
+    kvdb = current_app.extensions['kvdb']
+    status = kvdb.get('status') or {}
     return render_template('about.html', status=status)

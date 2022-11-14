@@ -1,11 +1,9 @@
 
 from flask import Blueprint, current_app, render_template
 
-from ...kvdb import kvdb
 from ...logger import MultiLogger
 from .ablive_searcher import AbliveSearcher
 from .livedm_searcher import LivedmSearcher
-from .liveroom_searcher import LiveroomSearcher
 from .view import AbliveView
 
 __all__ = 'bp',
@@ -20,7 +18,6 @@ bp = Blueprint(
 ROADS = current_app.config['ABLIVE']['ROADS']
 LIMITS = current_app.config['ABLIVE']['LIMITS']
 
-liveroom_searcher = LiveroomSearcher()
 search_logger = MultiLogger(
     **current_app.config['SEARCH_LOGGER']
 )
@@ -42,7 +39,6 @@ for road in ROADS:
             name=f'{road}',
             road=f'{road}',
             searcher=searcher,
-            liveroom_searcher=liveroom_searcher,
             search_logger=search_logger,
         ),
     )
@@ -50,11 +46,11 @@ for road in ROADS:
 
 @bp.route('/')
 def index():
-    notice = kvdb.get('notice')
+    kvdb = current_app.extensions['kvdb']
+    notice = kvdb.get('notice') or []
     return render_template(
         'live/index.html',
         notice=notice,
-        # notice=[],
     )
 
 

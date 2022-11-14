@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, current_app
 
 from .logger import JsonLogger
 from .utils import get_time
@@ -13,25 +13,22 @@ if app.config['DEBUG']:
 else:
     app.config.from_object('app_configs.ProdConfig')
 
-from .kvdb import kvdb
+from flask_sqlalchemy import SQLAlchemy
 from .mongodb import MongoDB
+from .kvdb import KvDb
+sqldb = SQLAlchemy(app)
 mongodb = MongoDB(app)
-kvdb.init_app(app)
+kvdb = KvDb(app)
 
 with app.app_context():
     from .views import general, live
     app.register_blueprint(general.bp)
     app.register_blueprint(live.bp)
 
-from .sqldb import db
-db.init_app(app)
-
 from .jinja_filters import register_jinja_filters
 register_jinja_filters(app)
 
-
 error_logger = JsonLogger('error.json')
-ERROR_TEXT = app.config['ERROR_TEXT']
 
 
 @app.errorhandler(Exception)
@@ -43,7 +40,7 @@ def default_error(e):
         "ip": request.headers.get('x-real-ip'),
     }
     error_logger.log(data)
-    return ERROR_TEXT
+    return current_app.config['ERROR_TEXT']
 
 
 @app.errorhandler(404)

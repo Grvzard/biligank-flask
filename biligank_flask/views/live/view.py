@@ -4,6 +4,7 @@ from flask import current_app, render_template, request
 from flask.views import View
 
 from ...utils import Timer
+from . import liveroom_searcher as liveroom
 
 __all__ = 'AbliveView',
 
@@ -12,30 +13,26 @@ class AbliveView(View):
     init_every_request = False
     methods = ["GET"]
 
-    def __init__(self, road, searcher, liveroom_searcher, search_logger):
+    def __init__(self, road, searcher, search_logger):
         self.road = road
         self.template = f'live/{road}.tmpl.html'
         if road == 'livedm':
             self.template = 'live/ablive_dm.tmpl.html'
         self.searcher = searcher
-        self.liveroom = liveroom_searcher
         self.search_logger = search_logger
 
     def dispatch_request(self):
         road = self.road
-        uid = request.args.get('uid', type=int)
+        uid = int(request.args.get('uid'))
         offset = request.args.get('offset')
         not_render = bool(request.args.get('not_render'))
         first_time = True if offset == '0' else False
-
-        if not isinstance(uid, int):
-            raise Exception('invalid uid')
 
         timer = Timer()
         with timer:
             data, next_offset, has_more, liverids = self.searcher.more(uid, offset)
 
-            rooms_dict = self.liveroom.get_livers_info(
+            rooms_dict = liveroom.get_livers_info(
                 db=current_app.extensions['mongo_client']['bili_liveroom'],
                 liverids=liverids,
             )
