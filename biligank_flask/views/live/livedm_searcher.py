@@ -1,25 +1,22 @@
 from typing import Any, Optional
 
-import pymongo
-
-from ...mongodb import mongodb
+from flask import current_app
 
 
 class LivedmSearcher:
-    def __init__(self, mongo_config: str, limits: int) -> None:
+    def __init__(self, limits: int) -> None:
         self.limits = limits
-        # self.mongo_client: pymongo.MongoClient = pymongo.MongoClient(mongo_config)
-        self.mongo_client = mongodb.client
-        self.db = self.mongo_client['livedm']
-        self.update_colls()
+        self.update_colls(current_app.extensions['mongo_client']['livedm'])
 
-    def update_colls(self) -> None:
-        colls = self.db.list_collection_names()
+    def update_colls(self, db) -> None:
+        colls = db.list_collection_names()
         colls.sort(reverse=False)
         self.colls = colls
         self.last_coll = colls[-1]
 
     def more(self, uid: int, offset: str) -> tuple[Optional[list[Any]], str, bool, set[Optional[int]]]:  # noqa
+        db = current_app.extensions['mongo_client']['livedm']
+
         try:
             if offset == '0':
                 offset = self.last_coll
@@ -35,7 +32,7 @@ class LivedmSearcher:
             table_idx -= 1
             table = self.colls[table_idx]
 
-            _data, _liverids = self.daily_docs(table, uid)
+            _data, _liverids = self.daily_docs(db, table, uid)
             data.extend(_data)
             liverids |= _liverids
 
@@ -47,8 +44,8 @@ class LivedmSearcher:
 
         return data, next_offset, has_more, liverids
 
-    def daily_docs(self, date: str, uid: int) -> tuple[list, set]:
-        docs = self.db[date].find({
+    def daily_docs(self, db, date: str, uid: int) -> tuple[list, set]:
+        docs = db[date].find({
             'uid': uid,
             }, {
             '_id': 0,

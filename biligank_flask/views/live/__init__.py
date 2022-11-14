@@ -18,12 +18,10 @@ bp = Blueprint(
     url_prefix='/live',
 )
 
-
-MONGO_CONFIG = current_app.config['ABLIVE']['MONGO_CONFIG']
 ROADS = current_app.config['ABLIVE']['ROADS']
 LIMITS = current_app.config['ABLIVE']['LIMITS']
 
-liveroom_searcher = LiveroomSearcher(MONGO_CONFIG)
+liveroom_searcher = LiveroomSearcher()
 search_logger = MultiLogger(
     **current_app.config['SEARCH_LOGGER']
 )
@@ -31,7 +29,6 @@ search_logger = MultiLogger(
 for road in ROADS:
     if road == 'livedm':
         searcher = LivedmSearcher(
-            MONGO_CONFIG,
             limits=LIMITS['livedm'],
         )
     else:

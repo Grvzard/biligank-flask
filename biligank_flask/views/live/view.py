@@ -1,6 +1,6 @@
 import time
 
-from flask import render_template, request
+from flask import render_template, request, current_app
 from flask.views import View
 
 from biligank_flask.utils import Timer
@@ -34,7 +34,11 @@ class AbliveView(View):
         timer = Timer()
         with timer:
             data, next_offset, has_more, liverids = self.searcher.more(uid, offset)
-            rooms_dict = self.liveroom.get_livers_info(liverids)
+
+            rooms_dict = self.liveroom.get_livers_info(
+                db=current_app.extensions['mongo_client']['bili_liveroom'],
+                liverids=liverids,
+            )
 
         self.search_logger.log({
             'uid': uid,
@@ -63,5 +67,3 @@ class AbliveView(View):
             self.template,
             **resp,
         )
-
-
