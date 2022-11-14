@@ -4,9 +4,8 @@ from flask import Flask, render_template, current_app
 
 app = Flask(__name__)
 
-app.config.from_prefixed_env()
 
-if app.config['DEBUG']:
+if app.debug:
     app.config.from_object('app_configs.DevConfig')
 else:
     app.config.from_object('app_configs.ProdConfig')
