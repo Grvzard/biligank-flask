@@ -1,7 +1,8 @@
 from collections import defaultdict
 from typing import Any, Optional
 
-from biligank_flask.sqldb import db
+from flask import current_app
+
 from biligank_flask.utils import get_date
 
 __all__ = 'AbliveSearcher',
@@ -17,7 +18,7 @@ class AbliveSearcher:
         self.tables: list = []
         self.last_table = ''
 
-    def update_tables(self) -> None:
+    def update_tables(self, db) -> None:
         # error: get_bind() got an unexpected keyword argument 'bind'
         # https://github.com/pallets-eco/flask-sqlalchemy/issues/953
         # resolved in flask-sqlalchemy 3.0.0 released on 2022.10.04
@@ -35,9 +36,10 @@ class AbliveSearcher:
 
     def more(self, uid: int, offset: str) -> tuple[list[Optional[Any]], str, bool, set[Optional[int]]]:  # noqa
         road = self.road
+        db = current_app.extensions['sqlalchemy']
 
         if get_date() != self.last_table or not self.tables:
-            self.update_tables()
+            self.update_tables(db)
 
         try:
             if offset == '0':
@@ -55,7 +57,7 @@ class AbliveSearcher:
             table = self.tables[table_idx]
 
             f = getattr(self, f'daily_{road}')
-            _data, _liverids = f(table, uid)
+            _data, _liverids = f(db, table, uid)
             data.extend(_data)
             liverids |= _liverids
 
@@ -69,7 +71,7 @@ class AbliveSearcher:
 
         return data, next_offset, has_more, liverids
 
-    def daily_tp(self, table: str, uid: int) -> DailyAbliveData:
+    def daily_tp(self, db, table: str, uid: int) -> DailyAbliveData:
         date_tp_list = []
 
         rs_tup = db.session.execute(
@@ -82,7 +84,7 @@ class AbliveSearcher:
 
         return date_tp_list, set()
 
-    def daily_ablive_dm(self, table: str, uid: int) -> DailyAbliveData:
+    def daily_ablive_dm(self, db, table: str, uid: int) -> DailyAbliveData:
         date_danmaku_cards = []
         _livers = set()
 
@@ -106,7 +108,7 @@ class AbliveSearcher:
 
         return date_danmaku_cards, _livers
 
-    def daily_ablive_en(self, table: str, uid: int) -> DailyAbliveData:
+    def daily_ablive_en(self, db, table: str, uid: int) -> DailyAbliveData:
         date_entry_list = []
         _livers = set()
 
@@ -121,7 +123,7 @@ class AbliveSearcher:
 
         return date_entry_list, _livers
 
-    def daily_ablive_gf(self, table: str, uid: int) -> DailyAbliveData:
+    def daily_ablive_gf(self, db, table: str, uid: int) -> DailyAbliveData:
         date_gift_list = []
         _livers = set()
 
@@ -136,7 +138,7 @@ class AbliveSearcher:
 
         return date_gift_list, _livers
 
-    def daily_ablive_sc(self, table: str, uid: int) -> DailyAbliveData:
+    def daily_ablive_sc(self, db, table: str, uid: int) -> DailyAbliveData:
         date_sc_list = []
         liverid = uid
 
