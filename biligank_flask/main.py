@@ -1,8 +1,6 @@
 
-from flask import Flask, render_template, request, current_app
+from flask import Flask, render_template, current_app
 
-from .logger import JsonLogger
-from .utils import get_time
 
 app = Flask(__name__)
 
@@ -28,18 +26,13 @@ with app.app_context():
 from .jinja_filters import register_jinja_filters
 register_jinja_filters(app)
 
-error_logger = JsonLogger('error.json')
+from .logging import configure_logging
+configure_logging(app)
 
 
 @app.errorhandler(Exception)
 def default_error(e):
-    data = {
-        "time": get_time(),
-        "path": request.full_path,
-        "info": str(e),
-        "ip": request.headers.get('x-real-ip'),
-    }
-    error_logger.log(data)
+    current_app.logger.error(str(e))
     return current_app.config['ERROR_TEXT']
 
 
