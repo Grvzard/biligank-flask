@@ -3,7 +3,7 @@ class Config:
     ERROR_TEXT = "出错了。"
     ABLIVE = {
         "MONGO_CONFIG": "mongodb://localhost:27017/",
-        "ROADS": ["ablive_dm", "ablive_en", "ablive_gf", "ablive_sc", "tp", "livedm"],
+        "ROADS": ["ablive_dm", "ablive_en", "ablive_gf", "ablive_sc", "tp"],
         "LIMITS": {
             'ablive_dm': 2,
             'ablive_en': 5,
