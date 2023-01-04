@@ -28,10 +28,10 @@ class AbliveSearcher:
         ).all()
         tables = [rs[0] for rs in rs_tup]
         tables.sort(reverse=False)
-        if self.road in ('tp', 'ablive_sc'):
+        if self.road in ('tp',):
             self.tables = tables
         else:
-            self.tables = tables[-15:]
+            self.tables = tables[-7:]
         self.last_table = tables[-1]
 
     def more(self, uid: int, offset: str) -> tuple[list[Optional[Any]], str, bool, set[Optional[int]]]:  # noqa
