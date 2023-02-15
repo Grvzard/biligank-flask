@@ -55,28 +55,14 @@
         $("#result-content").empty();
 
         let road = $("#road-selector").data("road");
-        if (road == 'livedm') {
-            // get_livedm_map(uid);
-            let offset = "0";
-            get_live_data(uid, road, offset);
-        } else {
-            let offset = "0";
-            get_live_data(uid, road, offset);
-        }
+        let offset = "0";
+        get_live_data(uid, road, offset);
     }
 
     function get_live_data(uid, road, offset){
         $("#addition-pagination").remove();
         $("#result-loading").show();
         $.get("/live/"+road, {"uid":uid, "offset":offset}, function(template){
-            $("#result-loading").hide();
-            $("#result-content").append(template);
-        });
-    }
-
-    function get_livedm_map(uid){
-        $("#result-loading").show();
-        $.get("/livedm/map", {"uid":uid}, function(template){
             $("#result-loading").hide();
             $("#result-content").append(template);
         });
