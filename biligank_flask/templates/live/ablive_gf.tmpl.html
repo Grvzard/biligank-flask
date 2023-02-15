@@ -11,7 +11,7 @@
         <th>时间</th>
         <th>主播</th>
         <th>礼物</th>
-        <th>花费</th>
+        <th>花费(￥)</th>
     </tr>
 </thead>
 
@@ -26,7 +26,7 @@
         <td>{{ gift.ts |strftime }}</td>
         <td>{{ space(gift.liverid, liver_uname) }}</td>
         <td>{{ gift.gift_info }}</td>
-        <td>￥ {{ gift.gift_cost }}</td>
+        <td>{{ gift.gift_cost }}</td>
     </tr>
 {% endfor %}
 </tbody>

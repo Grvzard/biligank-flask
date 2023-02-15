@@ -10,7 +10,7 @@
     <tr>
         <th>时间</th>
         <th>用户</th>
-        <th>花费</th>
+        <th style="word-break: keep-all">花费(￥)</th>
         <th>留言</th>
     </tr>
 </thead>
@@ -19,7 +19,7 @@
     <tr>
         <td>{{ superchat.ts |ts2clock }}</td>
         <td>{{ space(superchat.uid, superchat.uname) }}</td>
-        <td>￥{{ superchat.sc_price |int }}</td>
+        <td>{{ superchat.sc_price |int }}</td>
         <td>{{ superchat.text }}</td>
     </tr>
 {% endfor %}
