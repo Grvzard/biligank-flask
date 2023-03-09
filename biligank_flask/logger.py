@@ -51,6 +51,12 @@ class MongoLogger:
 
 
 class TgbotLogger:
+    HTML_ENTITIES = (
+        ('<', '&lt;'),
+        ('>', '&gt;'), 
+        ('&', '&amp;')
+    )
+
     def __init__(self, setting):
         self.token = setting['token']
         self.chat_id = setting['chat_id']
@@ -58,13 +64,19 @@ class TgbotLogger:
     def log(self, log_info):
         url = f"https://api.telegram.org/bot{self.token}/sendMessage"
         text = "\n".join(map(str, log_info.values()))
+        for _ in self.HTML_ENTITIES:
+            text = text.replace(_[0], _[1])
         payload = {
             "chat_id": self.chat_id,
             "text": text,
             "parse_mode": "HTML",
+            'disable_web_page_preview': True,
         }
         resp = requests.post(url, json=payload, timeout=5).json()
         if resp['ok']:
             return True
         else:
-            raise Exception('tgbot send msg failed')
+            raise Exception(
+                'tgbot send msg failed: [%s] %s'
+                % (resp['result']['error_code'], response['result']['description'])
+            )
