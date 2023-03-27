@@ -93,18 +93,19 @@ class AbliveSearcher:
             {'uid': uid},
             bind=db.get_engine(bind_key='ablive_dm')
         ).all()
-        _tmp = defaultdict(list)
-        for ts, liverid, text in rs_tup:
-            _tmp[liverid].append((ts, text))
-            _livers.add(liverid)
 
-        for liverid, danmakus in _tmp.items():
-            card = {
-                'date': table,
-                'liverid': liverid,
-                'danmakus': danmakus,
-            }
-            date_danmaku_cards.append(card)
+        last_liverid = 0
+        for ts, liverid, text in rs_tup:
+            if liverid != last_liverid:
+                last_liverid = liverid
+                _livers.add(liverid)
+                card = {
+                    'date': table,
+                    'liverid': liverid,
+                    'danmakus': [],
+                }
+                date_danmaku_cards.append(card)
+            date_danmaku_cards[-1]['danmakus'].append((ts, text))
 
         return date_danmaku_cards, _livers
 
