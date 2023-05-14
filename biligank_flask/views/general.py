@@ -22,7 +22,16 @@ feedback_logger = MultiLogger(**current_app.config['FEEDBACK_LOGGER'])
 
 @bp.route('/feedback', methods=['POST'])
 def feedback():
-    text = request.form['text']
+    content_type = request.headers.get("content_type")
+    assert content_type is not None
+    if content_type == 'application/json':
+        assert request.json is not None
+        text = request.json.get('text')
+    elif content_type.startswith('application/x-www-form-urlencoded'):    
+        text = request.form['text']
+    else:
+        raise Exception('unknown content type')
+
     data = {
         'time': get_time(),
         'text': text,
