@@ -46,18 +46,16 @@
 {% set date, liverid, danmakus = card.values() %}
 {% set liver_uname = rooms_dict[liverid].uname %}
 <div class="card danmaku_card" id="liver-{{liver_uname}}">
-    <div class="card-header" data-bs-toggle="collapse" data-bs-target="#card-{{liverid}}-{{date}}">
+    <div class="card-header">
         {{date}} {{ space(liverid, liver_uname) }}
         <span class="badge bg-primary">{{card.danmakus | length}}</span>
     </div>
-    <div class="collapse show" id="card-{{liverid}}-{{date}}">
     <div class="card-body">
     {% for danmaku in danmakus %}
         <span class="danmaku">
         {{ danmaku[0] |ts2clock }} -> {{ danmaku[1] }} <br>
         </span>
     {% endfor %}
-    </div>
     </div>
 </div>
 {% endfor %}
