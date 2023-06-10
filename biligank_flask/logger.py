@@ -19,6 +19,8 @@ class MultiLogger:
                 h = JsonLogger(setting)
             elif type_.startswith('tgbot'):
                 h = TgbotLogger(setting)
+            else:
+                raise Exception('unknown logger type')
             self.loggers.append(h)
 
     def log(self, log_info):
@@ -78,5 +80,5 @@ class TgbotLogger:
         else:
             raise Exception(
                 'tgbot send msg failed: [%s] %s'
-                % (resp['result']['error_code'], response['result']['description'])
+                % (resp['result']['error_code'], resp['result']['description'])
             )
