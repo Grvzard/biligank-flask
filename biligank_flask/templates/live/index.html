@@ -64,7 +64,7 @@
         $("#result-loading").show();
         $.get("/live/"+road, {"uid":uid, "offset":offset}, function(template){
             $("#result-loading").hide();
-            $("#result-content").append(template);
+            $("#result-content").append(template.html);
         });
     }
 

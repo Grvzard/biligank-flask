@@ -60,7 +60,6 @@ class AbliveView(View):
         if not_render:
             return resp
 
-        return render_template(
-            self.template,
-            **resp,
-        )
+        return {
+            "html": render_template(self.template, **resp)
+        }
