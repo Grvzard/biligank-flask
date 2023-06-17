@@ -65,7 +65,10 @@ class TgbotLogger:
 
     def log(self, log_info):
         url = f"https://api.telegram.org/bot{self.token}/sendMessage"
-        text = "\n".join(map(str, log_info.values()))
+
+        text = "#biligank-logger\n"
+        text += "\n".join(map(str, log_info.values()))
+
         for _ in self.HTML_ENTITIES:
             text = text.replace(_[0], _[1])
         payload = {
