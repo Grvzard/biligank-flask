@@ -2,7 +2,8 @@ import json
 from pathlib import Path
 
 import pymongo
-import requests
+import httpx
+from pydantic import BaseModel
 
 from .utils import get_date
 
@@ -28,13 +29,9 @@ class MultiLogger:
             logger.log(log_info)
 
 
-def make_logs_dir():
-    Path('logs').mkdir(exist_ok=True)
-
-
 class JsonLogger:
     def __init__(self, file_name):
-        make_logs_dir()
+        Path('logs').mkdir(exist_ok=True)
         self.file = Path('logs') / file_name
 
     def log(self, log_info):
@@ -52,32 +49,44 @@ class MongoLogger:
         self.db[get_date()].insert_one(log_info)
 
 
+class TgbotConfig(BaseModel):
+    token: str
+    chat_id: str
+    tag_prefix: str = 'biligank'
+    proxy: str = ''
+
+
 class TgbotLogger:
     HTML_ENTITIES = (
         ('<', '&lt;'),
-        ('>', '&gt;'), 
+        ('>', '&gt;'),
         ('&', '&amp;')
     )
 
-    def __init__(self, setting):
-        self.token = setting['token']
-        self.chat_id = setting['chat_id']
+    def __init__(self, setting: dict):
+        self._config = TgbotConfig(**setting)
+        self._proxies = {}
+        if self._config.proxy:
+            self._proxies['https://'] = self._config.proxy
 
     def log(self, log_info):
-        url = f"https://api.telegram.org/bot{self.token}/sendMessage"
+        url = f"https://api.telegram.org/bot{self._config.token}/sendMessage"
 
-        text = "#biligank-logger\n"
+        text = f"#{self._config.tag_prefix}\n"
         text += "\n".join(map(str, log_info.values()))
 
         for _ in self.HTML_ENTITIES:
             text = text.replace(_[0], _[1])
+
         payload = {
-            "chat_id": self.chat_id,
+            "chat_id": self._config.chat_id,
             "text": text,
             "parse_mode": "HTML",
             'disable_web_page_preview': True,
         }
-        resp = requests.post(url, json=payload, timeout=5).json()
+
+        resp = httpx.post(url, json=payload, timeout=10, proxies=self._proxies).json()
+
         if resp['ok']:
             return True
         else:

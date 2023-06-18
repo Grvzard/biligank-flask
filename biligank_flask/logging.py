@@ -1,8 +1,7 @@
 import logging
+from pathlib import Path
 
 from flask import has_request_context, request
-
-from .logger import make_logs_dir
 
 
 class RequestFormatter(logging.Formatter):
@@ -18,7 +17,7 @@ class RequestFormatter(logging.Formatter):
 
 
 def configure_logging(app):
-    make_logs_dir()
+    Path('logs').mkdir(exist_ok=True)
     fmt = RequestFormatter(
         '[%(asctime)s] [%(remote_addr)s] %(path)s\n -- %(message)s'
     )
