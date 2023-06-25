@@ -32,7 +32,9 @@ configure_logging(app)
 @app.errorhandler(Exception)
 def default_error(e):
     current_app.logger.error(str(e))
-    return current_app.config['ERROR_TEXT']
+    return {
+        'html': current_app.config['ERROR_TEXT']
+    }
 
 
 @app.errorhandler(404)
