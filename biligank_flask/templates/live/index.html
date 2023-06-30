@@ -62,9 +62,16 @@
     function get_live_data(uid, road, offset){
         $("#addition-pagination").remove();
         $("#result-loading").show();
-        $.get("/live/"+road, {"uid":uid, "offset":offset}, function(template){
+        axios.get("/live/"+road, {params:{"uid":uid, "offset":offset}})
+        .then(function(response){
+            $("#result-content").append(response.data.html);
+        })
+        .catch(function(error){
+            $("#result-content").append("error occured")
+            console.log(error);
+        })
+        .then(function(){
             $("#result-loading").hide();
-            $("#result-content").append(template.html);
         });
     }
 
