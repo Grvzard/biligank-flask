@@ -35,6 +35,8 @@ class AbliveSearcher:
         self.last_table = tables[-1]
 
     def more(self, uid: int, offset: str) -> tuple[list[Optional[Any]], str, bool, set[Optional[int]]]:  # noqa
+        if uid <= 0:
+            raise Exception(f"invalid uid: {uid}")
         road = self.road
         db = current_app.extensions['sqlalchemy']
 
