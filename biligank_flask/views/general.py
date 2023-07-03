@@ -43,6 +43,10 @@ def feedback():
 
 @bp.route('/about')
 def about():
+    return render_template('about.html', status={})
+
+
+@bp.route('/metrics')
+def metrics():
     kvdb = current_app.extensions['kvdb']
-    status = kvdb.get('status') or {}
-    return render_template('about.html', status=status)
+    return kvdb.get('status') or {}
