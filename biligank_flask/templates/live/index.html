@@ -11,7 +11,7 @@
         直播记录
         </button>
 
-        <input type="search" class="form-control rounded-2 shadow-sm me-3 ms-3" onkeydown="if(event.keyCode==13) {searchbar_enter()}" oninput="value=value.replace(/[^\d]/g,'')" placeholder="uid" id="search_text" required>
+        <input type="search" class="form-control rounded-2 shadow-sm me-3 ms-3" onkeydown="if(event.keyCode==13) {searchbar_enter()}" oninput="value=value.replace(/(^0)|([^\d])/g,'').slice(0, 20)" placeholder="uid" id="search_text" required>
 
         <ul class="dropdown-menu text-center" id="road-selector" data-road="">
             <!-- <li><a class="dropdown-item" href="#" class= "road-select" data-road="ablive_dm">弹幕</a></li>
