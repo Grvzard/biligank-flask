@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Final, Dict
 
 import pymongo
 import httpx
@@ -57,11 +58,11 @@ class TgbotConfig(BaseModel):
 
 
 class TgbotLogger:
-    HTML_ENTITIES = (
-        ('<', '&lt;'),
-        ('>', '&gt;'),
-        ('&', '&amp;')
-    )
+    HTML_ENTITIES: Final[Dict[str, str]] = {
+        '<': '&lt;',
+        '>': '&gt;',
+        '&': '&amp;',
+    }
 
     def __init__(self, setting: dict):
         self._config = TgbotConfig(**setting)
@@ -72,11 +73,17 @@ class TgbotLogger:
     def log(self, log_info):
         url = f"https://api.telegram.org/bot{self._config.token}/sendMessage"
 
-        text = f"#{self._config.tag_prefix}\n"
-        text += "\n".join(map(str, log_info.values()))
+        word_list = []
+        for info in log_info.values():
+            i = str(info)
+            for c in i:
+                if (r := self.HTML_ENTITIES.get(c, None)):
+                    word_list.append(r)
+                else:
+                    word_list.append(c)
+            word_list.append('\n')
 
-        for _ in self.HTML_ENTITIES:
-            text = text.replace(_[0], _[1])
+        text = f"#{self._config.tag_prefix}\n" + ''.join(word_list)
 
         payload = {
             "chat_id": self._config.chat_id,
